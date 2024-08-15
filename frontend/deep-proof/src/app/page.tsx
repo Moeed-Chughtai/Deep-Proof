@@ -29,7 +29,6 @@ export default function UploadPage() {
         method: "POST",
         body: formData,
       });
-      
 
       if (!response.ok) {
         throw new Error("Failed to fetch predictions");
@@ -45,11 +44,18 @@ export default function UploadPage() {
     }
   };
 
+  const averagePrediction = predictions.length > 0
+    ? predictions.reduce((acc, val) => acc + val, 0) / predictions.length
+    : 0;
+
+  const percentage = Math.min(Math.max(0, averagePrediction * 100), 100);
+  const classification = percentage > 50 ? "Deepfake" : "Real";
+
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
-        <h1 className="text-2xl font-semibold text-center mb-4">Upload and Predict</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <h1 className="text-2xl font-semibold text-center mb-6">Upload and Predict</h1>
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-col items-center">
             <label htmlFor="file-upload" className="block text-sm font-medium text-gray-700">
               Choose a video file
@@ -59,30 +65,33 @@ export default function UploadPage() {
               type="file"
               accept="video/*"
               onChange={handleFileChange}
-              className="mt-2 mb-4 border border-gray-300 rounded-lg p-2 cursor-pointer"
+              className="mt-2 border border-gray-300 rounded-lg p-2 cursor-pointer"
             />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
-            disabled={loading}
-          >
-            {loading ? "Processing..." : "Submit"}
-          </button>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition-colors"
+              disabled={loading}
+            >
+              {loading ? "Processing..." : "Submit"}
+            </button>
+          </div>
         </form>
 
         {error && <p className="mt-4 text-red-500 text-center">{error}</p>}
 
         {predictions.length > 0 && (
-          <div className="mt-6">
-            <h2 className="text-xl font-semibold mb-2">Predictions</h2>
-            <ul className="list-disc list-inside">
-              {predictions.map((prediction, index) => (
-                <li key={index} className="text-gray-800">
-                  Prediction {index + 1}: {prediction.toFixed(2)}
-                </li>
-              ))}
-            </ul>
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-left mb-2">Prediction:</h2>
+            <p className="text-3xl font-bold mb-2 text-center">{classification}</p>
+            <div className="w-full bg-gray-200 rounded-full h-6 mb-2">
+              <div
+                className="bg-blue-500 h-6 rounded-full"
+                style={{ width: `${percentage}%` }}
+              ></div>
+            </div>
+            <p className="text-lg text-gray-800 text-center">{percentage.toFixed(2)}%</p>
           </div>
         )}
       </div>
