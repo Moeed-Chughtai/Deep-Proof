@@ -5,8 +5,10 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from efficientnet.tfkeras import EfficientNetB0
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # Load the model
 model = tf.keras.models.load_model(r'C:\Users\moeed\Documents\1 Programming\Deep-Proof\backend\tmp_checkpoint\best_model.keras')
@@ -24,10 +26,16 @@ def preprocess_image(image):
 @app.route('/predict', methods=['POST'])
 def predict():
     if 'video' not in request.files:
+        app.logger.debug("No video file provided in request")
         return jsonify({'error': 'No video file provided'}), 400
-    
+
     video_file = request.files['video']
     
+    app.logger.debug("Received video file:", video_file.filename)
+    app.logger.debug("File size:", len(video_file.read()))
+    
+    video_file.seek(0)
+
     # Save the uploaded video to a temporary file
     video_path = './temp_video.mp4'
     video_file.save(video_path)
@@ -41,9 +49,7 @@ def predict():
             break
         
         image = preprocess_image(frame)
-        # Predict
         pred = model.predict(image)
-        # Convert prediction to standard Python float
         predictions.append(float(pred[0][0]))
     
     cap.release()
