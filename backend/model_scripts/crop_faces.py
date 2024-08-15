@@ -13,7 +13,7 @@ physical_devices = tf.config.list_physical_devices('GPU')
 for physical_device in physical_devices:
     tf.config.experimental.set_memory_growth(physical_device, True)
 
-base_path = '.\\dataset\\'
+base_path = '..\\dataset\\'
 
 def get_filename_only(file_path):
     return os.path.splitext(os.path.basename(file_path))[0]

@@ -3,7 +3,7 @@ import os
 import cv2
 import math
 
-base_path = './dataset'
+base_path = '../dataset'
 
 def get_filename_only(file_path):
     file_basename = os.path.basename(file_path)
