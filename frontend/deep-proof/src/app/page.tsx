@@ -52,12 +52,12 @@ export default function UploadPage() {
   const classification = percentage > 50 ? "Deepfake" : "Real";
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
-      <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
-        <h1 className="text-2xl font-semibold text-center mb-6">Upload and Predict</h1>
+    <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600">
+      <div className="w-full max-w-md p-8 bg-gray-800 rounded-lg shadow-2xl">
+        <h1 className="text-3xl font-bold text-center mb-6 text-white">Upload and Predict</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-col items-center">
-            <label htmlFor="file-upload" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="file-upload" className="block text-lg font-medium text-gray-300">
               Choose a video file
             </label>
             <input
@@ -65,13 +65,13 @@ export default function UploadPage() {
               type="file"
               accept="video/*"
               onChange={handleFileChange}
-              className="mt-2 border border-gray-300 rounded-lg p-2 cursor-pointer"
+              className="mt-4 border border-gray-600 rounded-lg p-2 cursor-pointer bg-gray-700 text-gray-300"
             />
           </div>
           <div className="flex justify-center">
             <button
               type="submit"
-              className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition-colors"
+              className="bg-pink-500 text-white py-2 px-8 rounded-lg hover:bg-pink-600 transition-colors"
               disabled={loading}
             >
               {loading ? "Processing..." : "Submit"}
@@ -83,15 +83,15 @@ export default function UploadPage() {
 
         {predictions.length > 0 && (
           <div className="mt-8">
-            <h2 className="text-xl font-semibold text-left mb-2">Prediction:</h2>
-            <p className="text-3xl font-bold mb-2 text-center">{classification}</p>
-            <div className="w-full bg-gray-200 rounded-full h-6 mb-2">
+            <h2 className="text-2xl font-semibold text-white mb-2">Prediction:</h2>
+            <p className={`text-4xl font-extrabold mb-4 text-center ${classification === "Deepfake" ? "text-red-500" : "text-green-500"}`}>{classification}</p>
+            <div className="w-full bg-gray-700 rounded-full h-8 mb-4">
               <div
-                className="bg-blue-500 h-6 rounded-full"
+                className="bg-pink-500 h-8 rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${percentage}%` }}
               ></div>
             </div>
-            <p className="text-lg text-gray-800 text-center">{percentage.toFixed(2)}%</p>
+            <p className="text-lg text-gray-300 text-center">{percentage.toFixed(2)}%</p>
           </div>
         )}
       </div>
